@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vivere Ingegneria — sito web
 
-## Getting Started
+Nuovo sito dell'associazione studentesca **Vivere Ingegneria nell'Ateneo**
+(Corsi di Laurea in Ingegneria, UniPa). Sostituisce il vecchio sito WordPress
+con un'applicazione moderna, veloce, responsive e mobile‑first.
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Next.js 16** (App Router) · **React 19** · **TypeScript**
+- **Tailwind CSS v4** + componenti custom in stile shadcn/ui
+- **Supabase** — Postgres + Auth + Storage + **Row Level Security**
+- **Tiptap** — editor rich text del blog
+- Deploy su **Vercel**
+
+Tema chiaro/scuro, palette derivata dal logo (blu brand `#071D99`), tipografia
+Space Grotesk (display) + Inter (testo).
+
+## Ruoli (4 livelli)
+
+| Ruolo | Può |
+| --- | --- |
+| **Utente standard** | Consultare il sito pubblico (nessun login) |
+| **Blogger** | Scrivere/modificare/eliminare i **propri** articoli |
+| **Amministratore WEB** | Blogger + modificare pagine statiche e impostazioni |
+| **Amministratore supremo** | Tutto + gestione utenti/ruoli e database |
+
+I permessi sono applicati **a livello di database** con RLS (non solo nella UI).
+Registrazione limitata alle email `@community.unipa.it` (con un'unica eccezione
+documentata), imposta lato client **e** server via trigger.
+
+## Struttura
+
+```
+src/
+  app/                 route pubbliche + /dashboard (area riservata)
+  components/          UI, header/footer, editor, form dashboard
+  content/pages.ts     contenuti di default delle pagine statiche (fallback + seed)
+  lib/
+    supabase/          client browser/server/admin + proxy sessione
+    data/              accesso dati con fallback (pagine, corsi, post, settings)
+    actions/           server actions (auth, posts, admin)
+    auth.ts / roles.ts guardie per ruolo
+    validation.ts      regola email istituzionale + password (Zod)
+supabase/
+  migrations/          0001 schema · 0002 RLS/funzioni · 0003 storage
+  seed.sql             corsi, pagine, impostazioni, eccezione email
+scripts/seed-users.mjs crea i 3 account iniziali (password casuali, mostrate 1 volta)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Sviluppo
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+cp .env.example .env.local   # compila con le chiavi Supabase
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Il sito **funziona anche senza Supabase collegato**: le pagine pubbliche usano i
+contenuti di default e l'area riservata mostra un avviso. Collega Supabase per
+attivare login, blog e pannello admin.
 
-## Learn More
+## Deploy
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Guida completa passo‑passo (Supabase + Vercel + env + seed + migrazione dominio)
+in **[DEPLOY.md](DEPLOY.md)**.

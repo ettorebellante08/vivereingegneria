@@ -1,26 +1,153 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
+/* next-themes toggles the `.dark` class on <html> */
+@custom-variant dark (&:is(.dark *));
+
+/*
+  Brand: Vivere Ingegneria
+  Primary blue derived from the logo (#071D99).
+  Design tokens are exposed as CSS variables and mapped into Tailwind's
+  theme so utilities like `bg-primary` / `text-muted-foreground` work.
+*/
 :root {
+  --radius: 0.75rem;
+
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0a0e1f;
+
+  --card: #ffffff;
+  --card-foreground: #0a0e1f;
+
+  --popover: #ffffff;
+  --popover-foreground: #0a0e1f;
+
+  /* Brand blue */
+  --primary: #071d99;
+  --primary-foreground: #ffffff;
+
+  --secondary: #eef1ff;
+  --secondary-foreground: #071d99;
+
+  --muted: #f4f5fb;
+  --muted-foreground: #5a6178;
+
+  --accent: #eef1ff;
+  --accent-foreground: #071d99;
+
+  --destructive: #d92d20;
+  --destructive-foreground: #ffffff;
+
+  --border: #e6e8f0;
+  --input: #e6e8f0;
+  --ring: #071d99;
+
+  /* Brand scale (useful for gradients / decorative) */
+  --brand-50: #eef1ff;
+  --brand-100: #dfe4ff;
+  --brand-200: #c4ccff;
+  --brand-300: #9aa8ff;
+  --brand-400: #6a7bff;
+  --brand-500: #4453f5;
+  --brand-600: #2f34e0;
+  --brand-700: #2226bd;
+  --brand-800: #071d99;
+  --brand-900: #0a1a7a;
+}
+
+.dark {
+  --background: #070a16;
+  --foreground: #eef0f8;
+
+  --card: #0d1122;
+  --card-foreground: #eef0f8;
+
+  --popover: #0d1122;
+  --popover-foreground: #eef0f8;
+
+  /* Brighten the brand blue for contrast on dark surfaces */
+  --primary: #7f8dff;
+  --primary-foreground: #070a16;
+
+  --secondary: #161b33;
+  --secondary-foreground: #cdd3ff;
+
+  --muted: #141930;
+  --muted-foreground: #9aa2c0;
+
+  --accent: #1a2044;
+  --accent-foreground: #cdd3ff;
+
+  --destructive: #ff5a4d;
+  --destructive-foreground: #070a16;
+
+  --border: #222947;
+  --input: #222947;
+  --ring: #7f8dff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-200: var(--brand-200);
+  --color-brand-300: var(--brand-300);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-brand-800: var(--brand-800);
+  --color-brand-900: var(--brand-900);
+
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-display);
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 0.25rem);
+  --radius-sm: calc(var(--radius) - 0.5rem);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Selection uses brand color */
+::selection {
+  background: color-mix(in srgb, var(--primary) 22%, transparent);
 }
