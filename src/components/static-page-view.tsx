@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/page-header";
 import { PlaceholderNote } from "@/components/placeholder-note";
 import { Prose } from "@/components/prose";
+import { Reveal } from "@/components/motion/reveal";
 import { getStaticPage } from "@/lib/data/pages";
 
 /**
@@ -13,9 +14,11 @@ export async function StaticPageView({ slug }: { slug: string }) {
   if (!page) notFound();
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-      <PageHeader title={page.title} description={page.description} />
-      <div className="mx-auto mt-12 max-w-3xl">
+    <div className="mx-auto max-w-6xl px-6 pb-24 pt-32 sm:pt-40">
+      <Reveal>
+        <PageHeader title={page.title} description={page.description} />
+      </Reveal>
+      <Reveal delay={0.1} className="mx-auto mt-16 max-w-3xl">
         {page.needsContent && (
           <PlaceholderNote>
             <p>
@@ -26,7 +29,7 @@ export async function StaticPageView({ slug }: { slug: string }) {
           </PlaceholderNote>
         )}
         <Prose html={page.bodyHtml} />
-      </div>
+      </Reveal>
     </div>
   );
 }

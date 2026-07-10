@@ -21,7 +21,7 @@ export default async function DashboardLayout({
   if (!user) redirect("/login?redirect=/dashboard");
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-6xl px-4 pb-12 pt-24 sm:px-6">
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold">Area riservata</h1>

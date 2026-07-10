@@ -31,7 +31,7 @@ export default async function CoursePage({
   if (!course) notFound();
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+    <div className="mx-auto max-w-6xl px-6 pb-24 pt-32 sm:pt-40">
       <Link
         href="/corsi"
         className="mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"

@@ -17,7 +17,7 @@ export default async function BlogPage() {
   const posts = await getPublishedPosts();
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+    <div className="mx-auto max-w-6xl px-6 pb-24 pt-32 sm:pt-40">
       <PageHeader
         eyebrow="Blog"
         title="Cosa succede in Ingegneria"

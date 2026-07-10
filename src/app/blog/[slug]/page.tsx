@@ -31,7 +31,7 @@ export default async function PostPage({
   if (!post) notFound();
 
   return (
-    <article className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
+    <article className="mx-auto max-w-3xl px-6 pb-24 pt-32 sm:pt-40">
       <Link
         href="/blog"
         className="mb-8 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"

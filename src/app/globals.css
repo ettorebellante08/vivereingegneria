@@ -143,11 +143,85 @@ body {
 }
 
 h1, h2, h3, h4, h5 {
-  font-family: var(--font-display), var(--font-sans), sans-serif;
-  letter-spacing: -0.02em;
+  font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  letter-spacing: -0.015em;
+  font-weight: 400; /* Fraunces reads best at lighter weights for display */
 }
 
 /* Selection uses brand color */
 ::selection {
   background: color-mix(in srgb, var(--primary) 22%, transparent);
+}
+
+/* ---- Editorial helpers ---------------------------------------------- */
+
+/* Thin, wide, uppercase label used across the redesign (nav, eyebrows). */
+.eyebrow {
+  font-family: var(--font-sans), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+/* Fine hairline used as a structural rule. */
+.hairline {
+  height: 1px;
+  background: var(--border);
+}
+
+/* Vertical rotated caption (like the reference's side labels). */
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+/* Grain/atmosphere overlay for cinematic sections. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+}
+
+/* Seamless marquee: two duplicated rows, translate one full row width. */
+@keyframes vi-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+/* Robust entrance: content defaults to its final state (both fill), so it is
+   never left invisible if JS/animation is interrupted. */
+@keyframes vi-rise {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: none; }
+}
+.vi-rise {
+  animation: vi-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes vi-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+/* Scroll cue nudge. */
+@keyframes vi-scroll-cue {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50% { transform: translateY(6px); opacity: 1; }
+}
+
+/* Motion accessibility: honour users who prefer less movement. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

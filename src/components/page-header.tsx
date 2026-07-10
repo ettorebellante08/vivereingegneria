@@ -14,14 +14,10 @@ export function PageHeader({
 }) {
   return (
     <div className={cn("mx-auto max-w-3xl text-center", className)}>
-      {eyebrow && (
-        <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-primary">
-          {eyebrow}
-        </p>
-      )}
-      <h1 className="text-balance text-4xl font-bold sm:text-5xl">{title}</h1>
+      {eyebrow && <p className="eyebrow mb-5 text-primary">{eyebrow}</p>}
+      <h1 className="text-balance text-5xl leading-[1.05] sm:text-7xl">{title}</h1>
       {description && (
-        <p className="mt-5 text-balance text-lg leading-relaxed text-muted-foreground">
+        <p className="mx-auto mt-7 max-w-2xl text-balance text-lg leading-relaxed text-muted-foreground">
           {description}
         </p>
       )}
