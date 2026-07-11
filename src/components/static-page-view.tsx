@@ -3,6 +3,7 @@ import { PageHeader } from "@/components/page-header";
 import { PlaceholderNote } from "@/components/placeholder-note";
 import { Prose } from "@/components/prose";
 import { Reveal } from "@/components/motion/reveal";
+import { BlockRenderer } from "@/components/blocks/block-renderer";
 import { getStaticPage } from "@/lib/data/pages";
 
 /**
@@ -28,7 +29,11 @@ export async function StaticPageView({ slug }: { slug: string }) {
             </p>
           </PlaceholderNote>
         )}
-        <Prose html={page.bodyHtml} />
+        {page.blocks && page.blocks.length > 0 ? (
+          <BlockRenderer blocks={page.blocks} />
+        ) : (
+          <Prose html={page.bodyHtml} />
+        )}
       </Reveal>
     </div>
   );

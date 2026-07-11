@@ -4,7 +4,8 @@ import { ArrowLeft } from "lucide-react";
 import { requireRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { STATIC_PAGES } from "@/content/pages";
-import { StaticPageEditor } from "@/components/dashboard/static-page-editor";
+import { createBlock, parseBlocks, type Block } from "@/lib/blocks/schema";
+import { BlockEditor } from "@/components/dashboard/block-editor/block-editor";
 
 export default async function EditStaticPage({
   params,
@@ -20,14 +21,24 @@ export default async function EditStaticPage({
   const supabase = await createClient();
   const { data } = await supabase
     .from("static_pages")
-    .select("title, content_html")
+    .select("title, content_html, content_json")
     .eq("slug", slug)
     .maybeSingle();
 
-  // Prefill the bundled scaffold when the DB row has no content yet.
-  const initialHtml = data?.content_html?.trim()
-    ? data.content_html
-    : fallback.bodyHtml;
+  const existingBlocks = data?.content_json ? parseBlocks(data.content_json) : [];
+
+  // Seed the editor: prefer saved blocks, then convert legacy HTML (either a
+  // previously saved blob or the bundled scaffold) into a starting paragraph
+  // block so admins never open a blank editor.
+  const initialBlocks: Block[] =
+    existingBlocks.length > 0
+      ? existingBlocks
+      : [
+          {
+            ...createBlock("paragraph"),
+            html: data?.content_html?.trim() || fallback.bodyHtml,
+          },
+        ];
   const initialTitle = data?.title ?? fallback.title;
 
   return (
@@ -48,10 +59,10 @@ export default async function EditStaticPage({
           </Link>
         </p>
       </div>
-      <StaticPageEditor
+      <BlockEditor
         slug={slug}
         initialTitle={initialTitle}
-        initialHtml={initialHtml}
+        initialBlocks={initialBlocks}
       />
     </div>
   );

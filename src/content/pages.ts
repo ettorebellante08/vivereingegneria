@@ -16,7 +16,7 @@ export type StaticPageContent = {
   slug: string;
   title: string;
   description: string;
-  /** Trusted HTML body rendered via <Prose>. */
+  /** Trusted HTML body rendered via <Prose>. Used when no block content exists. */
   bodyHtml: string;
   /** When true, the page shows an explicit placeholder note. */
   needsContent: boolean;

@@ -6,37 +6,12 @@ import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireRole } from "@/lib/auth";
-import { sanitizeRichText } from "@/lib/sanitize";
 import { institutionalEmailSchema } from "@/lib/validation";
 import type { AppRole } from "@/lib/database.types";
 
 export type AdminActionState =
   | { error?: string; ok?: string; password?: string; email?: string }
   | undefined;
-
-// ---------- Static pages (web_admin) ---------------------------------
-export async function updateStaticPage(
-  slug: string,
-  _prev: AdminActionState,
-  formData: FormData,
-): Promise<AdminActionState> {
-  const user = await requireRole("web_admin");
-  const title = String(formData.get("title") || "").trim();
-  const contentHtml = sanitizeRichText(String(formData.get("content_html") || ""));
-
-  if (title.length < 2) return { error: "Titolo non valido." };
-
-  const supabase = await createClient();
-  const { error } = await supabase.from("static_pages").upsert(
-    { slug, title, content_html: contentHtml, updated_by: user.id },
-    { onConflict: "slug" },
-  );
-  if (error) return { error: error.message };
-
-  revalidatePath(`/${slug}`);
-  revalidatePath("/dashboard/pagine");
-  return { ok: "Pagina salvata." };
-}
 
 // ---------- Site settings (web_admin) --------------------------------
 const settingsSchema = z.object({

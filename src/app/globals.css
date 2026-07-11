@@ -148,6 +148,21 @@ h1, h2, h3, h4 {
   animation: vi-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* Logo entrance: gentle scale + fade, used once for the hero mark. */
+@keyframes vi-pop {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: none; }
+}
+.vi-pop {
+  animation: vi-pop 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Slow breathing glow behind the hero logo. */
+@keyframes vi-breathe {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
+  50% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+}
+
 /* Drop cap for the lead paragraph of editorial sections. */
 .dropcap::first-letter {
   font-family: var(--font-display), Georgia, serif;

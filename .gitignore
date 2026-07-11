@@ -43,3 +43,6 @@ next-env.d.ts
 # Claude Code plugin/skill artifacts (not project code)
 .agents/
 skills-lock.json
+
+# Raw source assets staged locally before processing into public/
+/Foto/

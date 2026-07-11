@@ -4,7 +4,10 @@ import { SITE } from "@/lib/site-config";
 import { getPublishedPosts, formatDate } from "@/lib/data/posts";
 import { getCourses } from "@/lib/data/courses";
 import { Hero } from "@/components/home/hero";
+import { PhotoGallery } from "@/components/home/photo-gallery";
+import { GALLERY_PHOTOS } from "@/content/gallery";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
+import { Counter } from "@/components/motion/counter";
 
 export const revalidate = 60;
 
@@ -36,10 +39,22 @@ export default async function Home() {
   ]);
   const [featured, ...rest] = posts;
   const secondary = rest.slice(0, 4);
+  const yearsActive = new Date().getFullYear() - SITE.foundedYear;
 
   return (
     <>
       <Hero />
+
+      {/* Photo gallery — the association, in the moment */}
+      {GALLERY_PHOTOS.length > 0 && (
+        <section className="mx-auto max-w-6xl px-6 pb-20 pt-4 sm:pb-28">
+          <Reveal className="mb-8">
+            <p className="eyebrow text-primary">I nostri momenti</p>
+            <h2 className="mt-3 text-4xl sm:text-5xl">La vita di Vivere Ingegneria</h2>
+          </Reveal>
+          <PhotoGallery photos={GALLERY_PHOTOS} />
+        </section>
+      )}
 
       {/* From the blog — the centrepiece */}
       <section className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
@@ -133,8 +148,10 @@ export default async function Home() {
           <RevealGroup className="mt-14 grid gap-8 sm:grid-cols-3">
             {highlights.map((h) => (
               <RevealItem key={h.href}>
-                <Link href={h.href} className="group block border-t border-foreground/15 pt-6">
-                  <span className="font-display text-2xl text-primary">{h.n}</span>
+                <Link href={h.href} className="group block border-t-2 border-foreground/15 pt-6 transition-colors hover:border-primary">
+                  <span className="inline-block origin-left font-display text-2xl text-primary transition-transform duration-300 group-hover:scale-110">
+                    {h.n}
+                  </span>
                   <h3 className="mt-4 flex items-center gap-2 text-2xl">
                     {h.title}
                     <ArrowUpRight className="size-5 text-muted-foreground transition-all group-hover:translate-x-0.5 group-hover:text-primary" />
@@ -147,6 +164,32 @@ export default async function Home() {
             ))}
           </RevealGroup>
         </div>
+      </section>
+
+      {/* Numbers */}
+      <section className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
+        <RevealGroup className="grid gap-10 sm:grid-cols-3">
+          <RevealItem className="text-center sm:text-left">
+            <div className="font-display text-6xl text-primary sm:text-7xl">
+              <Counter value={yearsActive} suffix="+" />
+            </div>
+            <p className="mt-2 text-sm text-muted-foreground">anni di attività</p>
+          </RevealItem>
+          <RevealItem className="text-center sm:text-left">
+            <div className="font-display text-6xl text-primary sm:text-7xl">
+              <Counter value={14} />
+            </div>
+            <p className="mt-2 text-sm text-muted-foreground">corsi di laurea</p>
+          </RevealItem>
+          <RevealItem className="text-center sm:text-left">
+            <div className="font-display text-6xl text-primary sm:text-7xl">
+              <Counter value={posts.length} />
+            </div>
+            <p className="mt-2 text-sm text-muted-foreground">
+              articoli pubblicati
+            </p>
+          </RevealItem>
+        </RevealGroup>
       </section>
 
       {/* Courses */}
@@ -169,7 +212,7 @@ export default async function Home() {
             <RevealItem key={c.slug}>
               <Link
                 href={`/corsi/${c.slug}`}
-                className="group flex items-center justify-between gap-3 border-b border-border py-4 transition-colors hover:text-primary"
+                className="group -mx-3 flex items-center justify-between gap-3 rounded-lg border-b border-border px-3 py-4 transition-all hover:border-transparent hover:bg-secondary/70 hover:text-primary"
               >
                 <span className="text-lg">{c.name}</span>
                 <ArrowUpRight className="size-4 shrink-0 text-muted-foreground transition-all group-hover:translate-x-0.5 group-hover:text-primary" />
