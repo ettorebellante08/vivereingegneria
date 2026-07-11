@@ -1,48 +1,47 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* next-themes toggles the `.dark` class on <html> */
+/* next-themes toggles the `.dark` class on <html> — the site is light-only. */
 @custom-variant dark (&:is(.dark *));
 
 /*
-  Brand: Vivere Ingegneria
-  Primary blue derived from the logo (#071D99).
-  Design tokens are exposed as CSS variables and mapped into Tailwind's
-  theme so utilities like `bg-primary` / `text-muted-foreground` work.
+  Vivere Ingegneria — Editorial / Magazine system (light, warm, blog-first).
+  Warm paper background, ink text, a single brand-blue accent (#071D99).
 */
 :root {
-  --radius: 0.75rem;
+  --radius: 0.5rem;
 
-  --background: #ffffff;
-  --foreground: #0a0e1f;
+  /* Warm editorial paper + ink */
+  --background: #faf8f3;
+  --foreground: #1a1a1e;
 
   --card: #ffffff;
-  --card-foreground: #0a0e1f;
+  --card-foreground: #1a1a1e;
 
   --popover: #ffffff;
-  --popover-foreground: #0a0e1f;
+  --popover-foreground: #1a1a1e;
 
-  /* Brand blue */
+  /* Brand blue — the single accent */
   --primary: #071d99;
   --primary-foreground: #ffffff;
 
-  --secondary: #eef1ff;
+  --secondary: #eef0fb;
   --secondary-foreground: #071d99;
 
-  --muted: #f4f5fb;
-  --muted-foreground: #5a6178;
+  --muted: #f0ede4;
+  --muted-foreground: #6b6862;
 
-  --accent: #eef1ff;
+  --accent: #eef0fb;
   --accent-foreground: #071d99;
 
-  --destructive: #d92d20;
+  --destructive: #c0362a;
   --destructive-foreground: #ffffff;
 
-  --border: #e6e8f0;
-  --input: #e6e8f0;
+  --border: #e7e2d6;
+  --input: #e7e2d6;
   --ring: #071d99;
 
-  /* Brand scale (useful for gradients / decorative) */
+  /* Brand scale */
   --brand-50: #eef1ff;
   --brand-100: #dfe4ff;
   --brand-200: #c4ccff;
@@ -53,37 +52,6 @@
   --brand-700: #2226bd;
   --brand-800: #071d99;
   --brand-900: #0a1a7a;
-}
-
-.dark {
-  --background: #070a16;
-  --foreground: #eef0f8;
-
-  --card: #0d1122;
-  --card-foreground: #eef0f8;
-
-  --popover: #0d1122;
-  --popover-foreground: #eef0f8;
-
-  /* Brighten the brand blue for contrast on dark surfaces */
-  --primary: #7f8dff;
-  --primary-foreground: #070a16;
-
-  --secondary: #161b33;
-  --secondary-foreground: #cdd3ff;
-
-  --muted: #141930;
-  --muted-foreground: #9aa2c0;
-
-  --accent: #1a2044;
-  --accent-foreground: #cdd3ff;
-
-  --destructive: #ff5a4d;
-  --destructive-foreground: #070a16;
-
-  --border: #222947;
-  --input: #222947;
-  --ring: #7f8dff;
 }
 
 @theme inline {
@@ -122,8 +90,8 @@
   --font-display: var(--font-display);
 
   --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 0.25rem);
-  --radius-sm: calc(var(--radius) - 0.5rem);
+  --radius-md: calc(var(--radius) - 0.125rem);
+  --radius-sm: calc(var(--radius) - 0.25rem);
 }
 
 * {
@@ -142,79 +110,56 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-h1, h2, h3, h4, h5 {
+/* Editorial serif headlines (Fraunces). */
+h1, h2, h3, h4 {
   font-family: var(--font-display), Georgia, "Times New Roman", serif;
-  letter-spacing: -0.015em;
-  font-weight: 400; /* Fraunces reads best at lighter weights for display */
+  letter-spacing: -0.02em;
+  font-weight: 500;
 }
 
-/* Selection uses brand color */
 ::selection {
-  background: color-mix(in srgb, var(--primary) 22%, transparent);
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
 }
 
 /* ---- Editorial helpers ---------------------------------------------- */
 
-/* Thin, wide, uppercase label used across the redesign (nav, eyebrows). */
+/* Thin, wide, uppercase kicker used across the site. */
 .eyebrow {
   font-family: var(--font-sans), sans-serif;
   text-transform: uppercase;
-  letter-spacing: 0.22em;
-  font-size: 0.72rem;
-  font-weight: 500;
+  letter-spacing: 0.2em;
+  font-size: 0.7rem;
+  font-weight: 600;
 }
 
-/* Fine hairline used as a structural rule. */
+/* Fine structural rule. */
 .hairline {
   height: 1px;
   background: var(--border);
 }
 
-/* Vertical rotated caption (like the reference's side labels). */
-.vertical-text {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-}
-
-/* Grain/atmosphere overlay for cinematic sections. */
-.grain::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.5;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
-}
-
-/* Seamless marquee: two duplicated rows, translate one full row width. */
-@keyframes vi-marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-100%); }
-}
-
-/* Robust entrance: content defaults to its final state (both fill), so it is
-   never left invisible if JS/animation is interrupted. */
+/* Subtle entrance — content defaults to its final state so it is never
+   left invisible if the animation is interrupted. */
 @keyframes vi-rise {
-  from { opacity: 0; transform: translateY(28px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: none; }
 }
 .vi-rise {
-  animation: vi-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: vi-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-@keyframes vi-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
+/* Drop cap for the lead paragraph of editorial sections. */
+.dropcap::first-letter {
+  font-family: var(--font-display), Georgia, serif;
+  float: left;
+  font-size: 3.4em;
+  line-height: 0.72;
+  font-weight: 500;
+  padding: 0.08em 0.12em 0 0;
+  color: var(--primary);
 }
 
-/* Scroll cue nudge. */
-@keyframes vi-scroll-cue {
-  0%, 100% { transform: translateY(0); opacity: 0.4; }
-  50% { transform: translateY(6px); opacity: 1; }
-}
-
-/* Motion accessibility: honour users who prefer less movement. */
+/* Motion accessibility. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
