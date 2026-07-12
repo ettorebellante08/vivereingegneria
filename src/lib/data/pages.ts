@@ -58,3 +58,48 @@ export async function getStaticPage(
 
   return fallback;
 }
+
+/**
+ * Resolve just the block content for any stored slug (including the reserved
+ * `home` and `corso:<slug>` documents). Empty array when Supabase isn't linked
+ * or no content exists yet — callers fall back to their default rendering.
+ */
+export async function getPageBlocks(slug: string): Promise<Block[]> {
+  if (!isSupabaseConfigured()) return [];
+
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("static_pages")
+      .select("content_json")
+      .eq("slug", slug)
+      .maybeSingle();
+
+    return data?.content_json ? parseBlocks(data.content_json) : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Title + blocks for a stored slug, for the dashboard editor to preload. */
+export async function getPageDraft(
+  slug: string,
+): Promise<{ title: string | null; blocks: Block[] }> {
+  if (!isSupabaseConfigured()) return { title: null, blocks: [] };
+
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("static_pages")
+      .select("title, content_json")
+      .eq("slug", slug)
+      .maybeSingle();
+
+    return {
+      title: data?.title ?? null,
+      blocks: data?.content_json ? parseBlocks(data.content_json) : [],
+    };
+  } catch {
+    return { title: null, blocks: [] };
+  }
+}

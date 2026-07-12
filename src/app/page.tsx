@@ -3,11 +3,14 @@ import { ArrowRight, ArrowUpRight, CalendarDays } from "lucide-react";
 import { SITE } from "@/lib/site-config";
 import { getPublishedPosts, formatDate } from "@/lib/data/posts";
 import { getCourses } from "@/lib/data/courses";
+import { getPageBlocks } from "@/lib/data/pages";
 import { Hero } from "@/components/home/hero";
 import { PhotoGallery, PhotoCover } from "@/components/home/photo-gallery";
 import { GALLERY_PHOTOS, GALLERY_COVER } from "@/content/gallery";
+import { BlockRenderer } from "@/components/blocks/block-renderer";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 import { Counter } from "@/components/motion/counter";
+import { HOME_SLUG } from "@/lib/blocks/paths";
 
 export const revalidate = 60;
 
@@ -36,9 +39,10 @@ const highlights = [
 ];
 
 export default async function Home() {
-  const [posts, courses] = await Promise.all([
+  const [posts, courses, homeBlocks] = await Promise.all([
     getPublishedPosts(),
     getCourses(),
+    getPageBlocks(HOME_SLUG),
   ]);
   const [featured, ...rest] = posts;
   const secondary = rest.slice(0, 4);
@@ -64,6 +68,16 @@ export default async function Home() {
       {GALLERY_PHOTOS.length > 0 && (
         <section className="mx-auto max-w-6xl px-6 pb-20 sm:pb-28">
           <PhotoGallery photos={GALLERY_PHOTOS} />
+        </section>
+      )}
+
+      {/* Editable zone — custom blocks composed from the dashboard (Home) */}
+      {homeBlocks.length > 0 && (
+        <section className="pb-4">
+          <BlockRenderer
+            blocks={homeBlocks}
+            data={{ posts, courses, galleryPhotos: GALLERY_PHOTOS, formatDate }}
+          />
         </section>
       )}
 
