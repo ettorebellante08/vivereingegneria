@@ -163,6 +163,36 @@ h1, h2, h3, h4 {
   50% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
 }
 
+/* Drifting gradient-mesh blobs behind the hero. */
+@keyframes vi-drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(6rem, 3rem) scale(1.12); }
+}
+@keyframes vi-drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-5rem, -2.5rem) scale(1.08); }
+}
+
+/* Hero scroll cue — the little dot easing down its track. */
+@keyframes vi-scroll-cue {
+  0% { transform: translateY(0); opacity: 0; }
+  30% { opacity: 1; }
+  60% { transform: translateY(0.6rem); opacity: 1; }
+  100% { transform: translateY(0.9rem); opacity: 0; }
+}
+
+/* Page-wide grain: a barely-there film texture that keeps flat surfaces alive.
+   Applied via an ::after overlay so it never intercepts pointer events. */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
 /* Drop cap for the lead paragraph of editorial sections. */
 .dropcap::first-letter {
   font-family: var(--font-display), Georgia, serif;

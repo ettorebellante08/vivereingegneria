@@ -4,8 +4,8 @@ import { SITE } from "@/lib/site-config";
 import { getPublishedPosts, formatDate } from "@/lib/data/posts";
 import { getCourses } from "@/lib/data/courses";
 import { Hero } from "@/components/home/hero";
-import { PhotoGallery } from "@/components/home/photo-gallery";
-import { GALLERY_PHOTOS } from "@/content/gallery";
+import { PhotoGallery, PhotoCover } from "@/components/home/photo-gallery";
+import { GALLERY_PHOTOS, GALLERY_COVER } from "@/content/gallery";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 import { Counter } from "@/components/motion/counter";
 
@@ -17,18 +17,21 @@ const highlights = [
     title: "Rappresentanza",
     text: "Portiamo la voce degli studenti negli organi che decidono la vita accademica.",
     href: "/rappresentanza",
+    img: "/gallery/evento-01.jpg",
   },
   {
     n: "02",
     title: "Attività",
     text: "Seminari, gruppi di studio, orientamento al lavoro ed eventi per la community.",
     href: "/attivita",
+    img: "/gallery/evento-03.jpg",
   },
   {
     n: "03",
     title: "Il mio corso",
     text: "14 Corsi di Laurea, ognuno con i suoi rappresentanti e le sue risorse.",
     href: "/corsi",
+    img: "/gallery/evento-06.jpg",
   },
 ];
 
@@ -45,13 +48,21 @@ export default async function Home() {
     <>
       <Hero />
 
-      {/* Photo gallery — the association, in the moment */}
+      {/* Photo cover band — the association, as a backdrop */}
+      <section className="mx-auto max-w-6xl px-6 pb-16 pt-10 sm:pb-20">
+        <Reveal>
+          <PhotoCover
+            photo={GALLERY_COVER}
+            eyebrow="I nostri momenti"
+            title="La vita di Vivere Ingegneria"
+            subtitle="Consigli, seminari, eventi e le persone che li rendono possibili."
+          />
+        </Reveal>
+      </section>
+
+      {/* Photo mosaic */}
       {GALLERY_PHOTOS.length > 0 && (
-        <section className="mx-auto max-w-6xl px-6 pb-20 pt-4 sm:pb-28">
-          <Reveal className="mb-8">
-            <p className="eyebrow text-primary">I nostri momenti</p>
-            <h2 className="mt-3 text-4xl sm:text-5xl">La vita di Vivere Ingegneria</h2>
-          </Reveal>
+        <section className="mx-auto max-w-6xl px-6 pb-20 sm:pb-28">
           <PhotoGallery photos={GALLERY_PHOTOS} />
         </section>
       )}
@@ -145,18 +156,31 @@ export default async function Home() {
             </h2>
           </Reveal>
 
-          <RevealGroup className="mt-14 grid gap-8 sm:grid-cols-3">
+          <RevealGroup className="mt-14 grid gap-6 sm:grid-cols-3">
             {highlights.map((h) => (
               <RevealItem key={h.href}>
-                <Link href={h.href} className="group block border-t-2 border-foreground/15 pt-6 transition-colors hover:border-primary">
-                  <span className="inline-block origin-left font-display text-2xl text-primary transition-transform duration-300 group-hover:scale-110">
+                <Link
+                  href={h.href}
+                  className="group relative flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-2xl p-6 text-white ring-1 ring-black/5 sm:aspect-[3/4]"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={h.img}
+                    alt=""
+                    className="absolute inset-0 -z-20 h-full w-full scale-105 object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                  />
+                  <div
+                    aria-hidden
+                    className="absolute inset-0 -z-10 bg-gradient-to-t from-[#050a2e]/92 via-[#071d99]/45 to-transparent transition-opacity duration-500 group-hover:from-[#050a2e]/95"
+                  />
+                  <span className="font-display text-2xl text-white/70 transition-transform duration-300 group-hover:-translate-y-0.5">
                     {h.n}
                   </span>
-                  <h3 className="mt-4 flex items-center gap-2 text-2xl">
+                  <h3 className="mt-2 flex items-center gap-2 text-2xl text-white">
                     {h.title}
-                    <ArrowUpRight className="size-5 text-muted-foreground transition-all group-hover:translate-x-0.5 group-hover:text-primary" />
+                    <ArrowUpRight className="size-5 text-white/70 transition-all group-hover:translate-x-0.5 group-hover:text-white" />
                   </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  <p className="mt-2 text-sm leading-relaxed text-white/80">
                     {h.text}
                   </p>
                 </Link>

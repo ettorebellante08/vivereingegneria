@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { ScrollProgress } from "@/components/motion/scroll-progress";
 import { SITE } from "@/lib/site-config";
 import { getSiteUrl } from "@/lib/site-url";
 
@@ -47,9 +48,9 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${fraunces.variable} h-full`}
     >
-      <body className="flex min-h-full flex-col">
+      <body className="grain flex min-h-full flex-col">
         <ThemeProvider attribute="class" forcedTheme="light">
-
+          <ScrollProgress />
           <SiteHeader />
           <main className="flex-1">{children}</main>
           <SiteFooter />

@@ -1,6 +1,7 @@
 /**
- * Home page photo gallery. Add new entries here as photos become available —
- * the grid layout adapts automatically (`span` controls tile size).
+ * Home page photography. One landscape photo drives the full-bleed cover band
+ * (used as a background with an opaque overlay); the rest compose an editorial
+ * mosaic. Add/replace entries here — the layout adapts to the `span` roles.
  */
 export type GalleryPhoto = {
   src: string;
@@ -9,6 +10,13 @@ export type GalleryPhoto = {
   span?: "normal" | "wide" | "tall" | "big";
 };
 
+/** The atmospheric landscape shot used behind the cover band. */
+export const GALLERY_COVER: GalleryPhoto = {
+  src: "/gallery/evento-02.jpg",
+  alt: "Il gruppo di Vivere Ingegneria riunito di sera davanti all'Edificio 7",
+};
+
+/** Mosaic photos, ordered for visual rhythm (one focal + supporting shots). */
 export const GALLERY_PHOTOS: GalleryPhoto[] = [
   {
     src: "/gallery/evento-04.jpg",
@@ -19,11 +27,6 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     src: "/gallery/evento-01.jpg",
     alt: "Foto di gruppo nel corridoio della facoltà con lo striscione dell'associazione",
     span: "tall",
-  },
-  {
-    src: "/gallery/evento-02.jpg",
-    alt: "Il gruppo riunito di sera davanti all'Edificio 7, con lo striscione Vivere Ingegneria",
-    span: "wide",
   },
   {
     src: "/gallery/evento-06.jpg",
