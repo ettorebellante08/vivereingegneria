@@ -5,11 +5,35 @@ import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/lib/auth";
 import { sanitizeRichText } from "@/lib/sanitize";
 import { pageBlocksSchema, type Block } from "@/lib/blocks/schema";
+import { publicPathForSlug } from "@/lib/blocks/paths";
 
 export type BlocksActionState = { error?: string; ok?: string } | undefined;
 
-/** Persist a static page's block-based content. web_admin+ only (enforced
- * again by RLS at the DB layer). */
+/** Sanitise every rich-text (paragraph) sub-field, including blocks nested in
+ * section columns. Everything else is rendered as plain text. */
+function sanitizeBlocks(blocks: Block[]): Block[] {
+  return blocks.map((block) => {
+    if (block.type === "paragraph") {
+      return { ...block, html: sanitizeRichText(block.html) };
+    }
+    if (block.type === "section") {
+      return {
+        ...block,
+        columns: block.columns.map((col) => ({
+          ...col,
+          blocks: col.blocks.map((lb) =>
+            lb.type === "paragraph" ? { ...lb, html: sanitizeRichText(lb.html) } : lb,
+          ),
+        })),
+      };
+    }
+    return block;
+  });
+}
+
+/** Persist a page's block-based content. Works for institutional pages and the
+ * reserved `home` / `corso:<slug>` documents. web_admin+ only (re-checked by
+ * RLS at the DB layer). */
 export async function saveStaticPageBlocks(
   slug: string,
   title: string,
@@ -26,12 +50,7 @@ export async function saveStaticPageBlocks(
     return { error: "Il contenuto della pagina non è valido." };
   }
 
-  // Sanitise rich-text sub-fields (paragraph HTML) before persisting.
-  const sanitized = parsed.data.blocks.map((block) =>
-    block.type === "paragraph"
-      ? { ...block, html: sanitizeRichText(block.html) }
-      : block,
-  );
+  const sanitized = sanitizeBlocks(parsed.data.blocks);
 
   const supabase = await createClient();
   const { error } = await supabase.from("static_pages").upsert(
@@ -46,8 +65,7 @@ export async function saveStaticPageBlocks(
 
   if (error) return { error: error.message };
 
-  revalidatePath(`/${slug}`);
+  revalidatePath(publicPathForSlug(slug));
   revalidatePath("/dashboard/pagine");
-  revalidatePath(`/dashboard/pagine/${slug}`);
   return { ok: "Pagina salvata." };
 }

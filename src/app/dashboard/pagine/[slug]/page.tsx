@@ -5,7 +5,8 @@ import { requireRole } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { STATIC_PAGES } from "@/content/pages";
 import { createBlock, parseBlocks, type Block } from "@/lib/blocks/schema";
-import { BlockEditor } from "@/components/dashboard/block-editor/block-editor";
+import { publicPathForSlug } from "@/lib/blocks/paths";
+import { VisualEditor } from "@/components/dashboard/visual-editor/visual-editor";
 
 export default async function EditStaticPage({
   params,
@@ -59,8 +60,9 @@ export default async function EditStaticPage({
           </Link>
         </p>
       </div>
-      <BlockEditor
+      <VisualEditor
         slug={slug}
+        publicPath={publicPathForSlug(slug)}
         initialTitle={initialTitle}
         initialBlocks={initialBlocks}
       />
