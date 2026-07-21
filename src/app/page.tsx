@@ -7,7 +7,6 @@ import { getCourses } from "@/lib/data/courses";
 import { getPageBlocks } from "@/lib/data/pages";
 import { Hero } from "@/components/home/hero";
 import { StoryScroll, type StoryChapter } from "@/components/home/story-scroll";
-import { PhotoGallery } from "@/components/home/photo-gallery";
 import { GALLERY_PHOTOS, GALLERY_COVER } from "@/content/gallery";
 import { BlockRenderer } from "@/components/blocks/block-renderer";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
@@ -95,6 +94,7 @@ export default async function Home() {
           src="/gallery/evento-05.jpg"
           alt="Un momento conviviale della serata sotto i portici del campus"
           fill
+          quality={70}
           sizes="100vw"
           className="object-cover object-center"
         />
@@ -128,20 +128,6 @@ export default async function Home() {
           </RevealGroup>
         </div>
       </section>
-
-      {/* The life of the association — photo mosaic */}
-      {GALLERY_PHOTOS.length > 0 && (
-        <section className="section container-page">
-          <Reveal className="mb-10 max-w-2xl">
-            <p className="eyebrow text-primary">I nostri momenti</p>
-            <h2 className="mt-3 text-balance text-display-lg">La vita di Vivere Ingegneria</h2>
-            <p className="mt-4 leading-relaxed text-muted-foreground">
-              Consigli, seminari, eventi e le persone che li rendono possibili.
-            </p>
-          </Reveal>
-          <PhotoGallery photos={GALLERY_PHOTOS} />
-        </section>
-      )}
 
       {/* Editable zone — custom blocks composed from the dashboard (Home) */}
       {homeBlocks.length > 0 && (
@@ -268,6 +254,7 @@ export default async function Home() {
           src="/gallery/evento-04.jpg"
           alt="Il gruppo di Vivere Ingegneria in posa sotto il monumento con l'aereo"
           fill
+          quality={70}
           sizes="100vw"
           className="object-cover object-center"
         />

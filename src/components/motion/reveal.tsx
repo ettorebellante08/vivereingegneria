@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 
 type Direction = "up" | "down" | "left" | "right" | "none";
 
-const OFFSET = 40;
+const OFFSET = 24;
 
 function offsetFor(dir: Direction) {
   switch (dir) {
@@ -48,7 +48,7 @@ export function Reveal({
       opacity: 1,
       x: 0,
       y: 0,
-      transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] },
+      transition: { duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] },
     },
   };
 
@@ -72,7 +72,7 @@ export function Reveal({
 export function RevealGroup({
   children,
   className,
-  stagger = 0.08,
+  stagger = 0.06,
   once = true,
 }: {
   children: ReactNode;
@@ -115,7 +115,7 @@ export function RevealItem({
           opacity: 1,
           x: 0,
           y: 0,
-          transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+          transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
         },
       }}
     >

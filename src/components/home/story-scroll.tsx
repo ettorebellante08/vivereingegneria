@@ -141,22 +141,20 @@ function CrossfadeImage({
       : [s - f, s + f, e - f, e + f];
   const opacityOut = isFirst ? [1, 1, 1, 0] : isLast ? [0, 1, 1, 1] : [0, 1, 1, 0];
 
+  // Opacity-only crossfade — compositor-friendly, no per-frame repaint of the
+  // full-bleed image (animating scale here was the main source of jank).
   const opacity = useTransform(progress, times, opacityOut, { clamp: true });
-  const scale = useTransform(
-    progress,
-    [Math.max(0, s - f), Math.min(1, e + f)],
-    [1.12, 1.2],
-    { clamp: true },
-  );
 
   return (
-    <motion.div style={{ opacity, scale }} className="absolute inset-0">
+    <motion.div style={{ opacity }} className="absolute inset-0 will-change-[opacity]">
       <Image
         src={src}
         alt={alt}
         fill
+        quality={70}
+        loading="eager"
         sizes="100vw"
-        className="object-cover object-center"
+        className="scale-105 object-cover object-center"
       />
     </motion.div>
   );

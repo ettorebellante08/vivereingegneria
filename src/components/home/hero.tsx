@@ -39,6 +39,7 @@ export function Hero({ src, alt }: { src: string; alt: string }) {
             alt={alt}
             fill
             priority
+            quality={72}
             sizes="100vw"
             className="object-cover object-center"
           />
