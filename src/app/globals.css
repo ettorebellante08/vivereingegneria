@@ -240,6 +240,12 @@ h1, h2, h3, h4 {
   50% { transform: translate(-5rem, -2.5rem) scale(1.08); }
 }
 
+/* Slow cinematic zoom on full-bleed hero/panel photography. */
+@keyframes vi-kenburns {
+  from { transform: scale(1.08); }
+  to { transform: scale(1.2); }
+}
+
 /* Hero scroll cue — the little dot easing down its track. */
 @keyframes vi-scroll-cue {
   0% { transform: translateY(0); opacity: 0; }

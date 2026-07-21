@@ -1,11 +1,13 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, ArrowUpRight, CalendarDays } from "lucide-react";
 import { SITE } from "@/lib/site-config";
 import { getPublishedPosts, formatDate } from "@/lib/data/posts";
 import { getCourses } from "@/lib/data/courses";
 import { getPageBlocks } from "@/lib/data/pages";
 import { Hero } from "@/components/home/hero";
-import { PhotoGallery, PhotoCover } from "@/components/home/photo-gallery";
+import { StoryScroll, type StoryChapter } from "@/components/home/story-scroll";
+import { PhotoGallery } from "@/components/home/photo-gallery";
 import { GALLERY_PHOTOS, GALLERY_COVER } from "@/content/gallery";
 import { BlockRenderer } from "@/components/blocks/block-renderer";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
@@ -15,27 +17,36 @@ import { HOME_SLUG } from "@/lib/blocks/paths";
 
 export const revalidate = 60;
 
-const highlights = [
+const CHAPTERS: StoryChapter[] = [
   {
     n: "01",
-    title: "Rappresentanza",
-    text: "Portiamo la voce degli studenti negli organi che decidono la vita accademica.",
+    eyebrow: "Rappresentanza",
+    title: "La voce degli studenti, dove si decide.",
+    text: "Portiamo le istanze degli studenti negli organi che governano la vita accademica: consigli, commissioni, tavoli di corso.",
     href: "/rappresentanza",
-    img: "/gallery/evento-01.jpg",
+    cta: "La rappresentanza",
+    photo: "/gallery/evento-01.jpg",
+    alt: "Foto di gruppo nel corridoio della facoltà con lo striscione dell'associazione",
   },
   {
     n: "02",
-    title: "Attività",
-    text: "Seminari, gruppi di studio, orientamento al lavoro ed eventi per la community.",
+    eyebrow: "Attività",
+    title: "Si impara anche fuori dall'aula.",
+    text: "Seminari, gruppi di studio, orientamento al lavoro ed eventi che tengono viva la community di Ingegneria.",
     href: "/attivita",
-    img: "/gallery/evento-03.jpg",
+    cta: "Le attività",
+    photo: "/gallery/evento-03.jpg",
+    alt: "Festeggiamenti nel corridoio della facoltà con la torta di compleanno",
   },
   {
     n: "03",
-    title: "Il mio corso",
-    text: "14 Corsi di Laurea, ognuno con i suoi rappresentanti e le sue risorse.",
+    eyebrow: "Il mio corso",
+    title: "Quattordici corsi, una comunità.",
+    text: "Ogni Corso di Laurea ha i suoi rappresentanti e le sue risorse. Trova il tuo e resta in contatto con chi lo vive.",
     href: "/corsi",
-    img: "/gallery/evento-06.jpg",
+    cta: "Trova il tuo corso",
+    photo: "/gallery/evento-06.jpg",
+    alt: "Foto di gruppo all'aperto tra gli alberi del campus",
   },
 ];
 
@@ -51,23 +62,83 @@ export default async function Home() {
 
   return (
     <>
-      <Hero />
+      {/* Cinematic photo hero */}
+      <Hero src={GALLERY_COVER.src} alt={GALLERY_COVER.alt} />
 
-      {/* Photo cover band — the association, as a backdrop */}
-      <section className="container-page pb-16 pt-10 sm:pb-20">
+      {/* Manifesto — a breath of light after the hero */}
+      <section className="section container-page">
         <Reveal>
-          <PhotoCover
-            photo={GALLERY_COVER}
-            eyebrow="I nostri momenti"
-            title="La vita di Vivere Ingegneria"
-            subtitle="Consigli, seminari, eventi e le persone che li rendono possibili."
-          />
+          <p className="eyebrow text-primary">Chi siamo</p>
+        </Reveal>
+        <Reveal delay={0.05}>
+          <p className="mt-6 max-w-4xl text-balance text-3xl font-medium leading-snug tracking-tight text-foreground sm:text-4xl">
+            {SITE.description}
+          </p>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <Link
+            href="/chi-siamo"
+            className="group mt-8 inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+          >
+            La nostra storia
+            <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+          </Link>
         </Reveal>
       </section>
 
-      {/* Photo mosaic */}
+      {/* Pinned scroll storytelling — the three pillars */}
+      <StoryScroll chapters={CHAPTERS} />
+
+      {/* Numbers over a photograph */}
+      <section className="relative flex min-h-[70svh] items-center overflow-hidden bg-[#050a2e] py-24">
+        <Image
+          src="/gallery/evento-05.jpg"
+          alt="Un momento conviviale della serata sotto i portici del campus"
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-br from-[#050a2e]/92 via-[#071d99]/70 to-[#050a2e]/92"
+        />
+        <div className="container-page relative">
+          <Reveal>
+            <p className="eyebrow text-white/70">In numeri</p>
+          </Reveal>
+          <RevealGroup className="mt-10 grid gap-10 sm:grid-cols-3">
+            <RevealItem>
+              <div className="accent-serif text-7xl text-white sm:text-8xl">
+                <Counter value={yearsActive} suffix="+" />
+              </div>
+              <p className="mt-2 text-sm text-white/70">anni di attività</p>
+            </RevealItem>
+            <RevealItem>
+              <div className="accent-serif text-7xl text-white sm:text-8xl">
+                <Counter value={14} />
+              </div>
+              <p className="mt-2 text-sm text-white/70">corsi di laurea</p>
+            </RevealItem>
+            <RevealItem>
+              <div className="accent-serif text-7xl text-white sm:text-8xl">
+                <Counter value={posts.length} />
+              </div>
+              <p className="mt-2 text-sm text-white/70">articoli pubblicati</p>
+            </RevealItem>
+          </RevealGroup>
+        </div>
+      </section>
+
+      {/* The life of the association — photo mosaic */}
       {GALLERY_PHOTOS.length > 0 && (
-        <section className="container-page pb-20 sm:pb-28">
+        <section className="section container-page">
+          <Reveal className="mb-10 max-w-2xl">
+            <p className="eyebrow text-primary">I nostri momenti</p>
+            <h2 className="mt-3 text-balance text-display-lg">La vita di Vivere Ingegneria</h2>
+            <p className="mt-4 leading-relaxed text-muted-foreground">
+              Consigli, seminari, eventi e le persone che li rendono possibili.
+            </p>
+          </Reveal>
           <PhotoGallery photos={GALLERY_PHOTOS} />
         </section>
       )}
@@ -82,7 +153,7 @@ export default async function Home() {
         </section>
       )}
 
-      {/* From the blog — the centrepiece */}
+      {/* From the blog */}
       <section className="section container-page">
         <Reveal className="flex items-end justify-between gap-4 border-b border-border pb-6">
           <div>
@@ -110,16 +181,16 @@ export default async function Home() {
             {/* Featured */}
             <Reveal>
               <Link href={`/blog/${featured.slug}`} className="group block">
-                <div className="overflow-hidden rounded-2xl border border-border shadow-sm transition-shadow duration-300 group-hover:shadow-lg">
+                <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-border shadow-sm transition-shadow duration-300 group-hover:shadow-xl">
                   {featured.cover_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={featured.cover_url}
                       alt=""
-                      className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                     />
                   ) : (
-                    <div className="aspect-[16/10] w-full bg-gradient-to-br from-brand-800 to-brand-500" />
+                    <div className="h-full w-full bg-gradient-to-br from-brand-800 to-brand-500" />
                   )}
                 </div>
                 <div className="mt-6 flex items-center gap-2 text-xs text-muted-foreground">
@@ -127,7 +198,7 @@ export default async function Home() {
                   {formatDate(featured.published_at)}
                   {featured.author_name && <span>· {featured.author_name}</span>}
                 </div>
-                <h3 className="mt-3 text-balance text-3xl leading-tight group-hover:text-primary sm:text-4xl">
+                <h3 className="mt-3 text-balance text-3xl leading-tight transition-colors group-hover:text-primary sm:text-4xl">
                   {featured.title}
                 </h3>
                 {featured.excerpt && (
@@ -161,76 +232,6 @@ export default async function Home() {
         )}
       </section>
 
-      {/* What we do */}
-      <section className="border-y border-border bg-muted/40">
-        <div className="section container-page">
-          <Reveal>
-            <p className="eyebrow text-primary">Cosa facciamo</p>
-            <h2 className="mt-3 max-w-2xl text-balance text-display-lg">
-              Tre modi di essere presenti, ogni giorno.
-            </h2>
-          </Reveal>
-
-          <RevealGroup className="mt-14 grid gap-6 sm:grid-cols-3">
-            {highlights.map((h) => (
-              <RevealItem key={h.href}>
-                <Link
-                  href={h.href}
-                  className="group relative flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-2xl p-6 text-white shadow-md ring-1 ring-black/5 transition-[transform,box-shadow] duration-300 hover:-translate-y-1.5 hover:shadow-xl sm:aspect-[3/4]"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={h.img}
-                    alt=""
-                    className="absolute inset-0 -z-20 h-full w-full scale-105 object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                  />
-                  <div
-                    aria-hidden
-                    className="absolute inset-0 -z-10 bg-gradient-to-t from-[#050a2e]/92 via-[#071d99]/45 to-transparent transition-opacity duration-500 group-hover:from-[#050a2e]/95"
-                  />
-                  <span className="accent-serif text-3xl text-white/75 transition-transform duration-300 group-hover:-translate-y-0.5">
-                    {h.n}
-                  </span>
-                  <h3 className="mt-2 flex items-center gap-2 text-2xl text-white">
-                    {h.title}
-                    <ArrowUpRight className="size-5 text-white/70 transition-all group-hover:translate-x-0.5 group-hover:text-white" />
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/80">
-                    {h.text}
-                  </p>
-                </Link>
-              </RevealItem>
-            ))}
-          </RevealGroup>
-        </div>
-      </section>
-
-      {/* Numbers */}
-      <section className="section container-page">
-        <RevealGroup className="grid gap-10 border-y border-border py-14 sm:grid-cols-3">
-          <RevealItem className="text-center sm:text-left">
-            <div className="accent-serif text-6xl text-primary sm:text-7xl">
-              <Counter value={yearsActive} suffix="+" />
-            </div>
-            <p className="mt-2 text-sm text-muted-foreground">anni di attività</p>
-          </RevealItem>
-          <RevealItem className="text-center sm:text-left">
-            <div className="accent-serif text-6xl text-primary sm:text-7xl">
-              <Counter value={14} />
-            </div>
-            <p className="mt-2 text-sm text-muted-foreground">corsi di laurea</p>
-          </RevealItem>
-          <RevealItem className="text-center sm:text-left">
-            <div className="accent-serif text-6xl text-primary sm:text-7xl">
-              <Counter value={posts.length} />
-            </div>
-            <p className="mt-2 text-sm text-muted-foreground">
-              articoli pubblicati
-            </p>
-          </RevealItem>
-        </RevealGroup>
-      </section>
-
       {/* Courses */}
       <section className="section container-page">
         <Reveal className="flex items-end justify-between gap-4 border-b border-border pb-6">
@@ -261,33 +262,39 @@ export default async function Home() {
         </RevealGroup>
       </section>
 
-      {/* CTA */}
-      <section className="container-page pb-24">
-        <Reveal>
-          <div className="relative overflow-hidden rounded-[1.75rem] border border-border bg-secondary px-8 py-16 text-center shadow-lg sm:px-16">
-            {/* soft brand glow, decorative */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--primary)_16%,transparent),transparent)] blur-2xl"
-            />
-            <h2 className="relative mx-auto max-w-2xl text-balance text-display-lg">
+      {/* Immersive CTA over a photograph */}
+      <section className="relative flex min-h-[70svh] items-center overflow-hidden bg-[#050a2e]">
+        <Image
+          src="/gallery/evento-04.jpg"
+          alt="Il gruppo di Vivere Ingegneria in posa sotto il monumento con l'aereo"
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-t from-[#050a2e]/94 via-[#050a2e]/60 to-[#050a2e]/80"
+        />
+        <div className="container-page relative text-center">
+          <Reveal>
+            <h2 className="mx-auto max-w-3xl text-balance text-display-xl text-white">
               Vuoi far parte di Vivere Ingegneria?
             </h2>
-            <p className="relative mx-auto mt-5 max-w-xl text-balance text-muted-foreground">
+            <p className="mx-auto mt-5 max-w-xl text-balance leading-relaxed text-white/80">
               Scrivici o passa a trovarci: c&apos;è sempre qualcosa da costruire
               insieme.
             </p>
-            <Magnetic className="relative mt-8 inline-block">
+            <Magnetic className="mt-9 inline-block">
               <Link
                 href="/contatti"
-                className="group inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-brand-700"
+                className="group inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-medium text-[#050a2e] transition-transform hover:scale-[1.03]"
               >
-                Contattaci{" "}
+                Contattaci
                 <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Magnetic>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       </section>
     </>
   );

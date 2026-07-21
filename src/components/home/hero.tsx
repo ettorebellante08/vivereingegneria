@@ -1,25 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRef } from "react";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useReducedMotion,
-  useMotionValue,
-  useSpring,
-} from "motion/react";
+import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { SITE } from "@/lib/site-config";
 import { Magnetic } from "@/components/motion/magnetic";
 
 /**
- * Light editorial masthead. The logo IS the headline — no wordmark text —
- * over a slow drifting brand-blue gradient mesh, with a glow that tracks the
- * cursor and a gentle parallax on scroll. Light surfaces only.
+ * Cinematic full-bleed hero. A single atmospheric photograph fills the
+ * viewport under a deep navy scrim, with an oversized typographic statement
+ * laid over it. The image drifts (ken-burns) and parallaxes on scroll; the
+ * copy lifts away as you leave. Photo-driven, immersive, editorial.
  */
-export function Hero() {
+export function Hero({ src, alt }: { src: string; alt: string }) {
   const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
 
@@ -27,115 +22,99 @@ export function Hero() {
     target: ref,
     offset: ["start start", "end start"],
   });
-  const logoY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, 40]);
-  const logoOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-
-  // Cursor-reactive glow.
-  const mx = useMotionValue(50);
-  const my = useMotionValue(50);
-  const gx = useSpring(mx, { stiffness: 60, damping: 20 });
-  const gy = useSpring(my, { stiffness: 60, damping: 20 });
-  const glow = useTransform(
-    [gx, gy],
-    ([x, y]) =>
-      `radial-gradient(38rem 38rem at ${x}% ${y}%, color-mix(in srgb, var(--primary) 14%, transparent), transparent 70%)`,
-  );
-
-  function handleMove(e: React.MouseEvent<HTMLElement>) {
-    if (reduce || !ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    mx.set(((e.clientX - rect.left) / rect.width) * 100);
-    my.set(((e.clientY - rect.top) / rect.height) * 100);
-  }
+  const imgY = useTransform(scrollYProgress, [0, 1], reduce ? ["0%", "0%"] : ["0%", "22%"]);
+  const contentY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, 90]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   return (
-    <section
-      ref={ref}
-      onMouseMove={handleMove}
-      className="relative overflow-hidden border-b border-border"
-    >
-      {/* Drifting gradient-mesh blobs */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+    <section ref={ref} className="relative h-[100svh] min-h-[640px] w-full overflow-hidden bg-[#050a2e]">
+      {/* Photo layer */}
+      <motion.div style={{ y: imgY }} className="absolute inset-0 -bottom-[22%]">
         <div
-          className="absolute -left-32 top-0 size-[34rem] rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--brand-400)_22%,transparent),transparent)] blur-2xl"
-          style={{ animation: reduce ? undefined : "vi-drift-a 18s ease-in-out infinite" }}
-        />
-        <div
-          className="absolute -right-24 bottom-0 size-[30rem] rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--primary)_18%,transparent),transparent)] blur-2xl"
-          style={{ animation: reduce ? undefined : "vi-drift-b 22s ease-in-out infinite" }}
-        />
-      </div>
-
-      {/* Cursor-reactive glow */}
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10"
-        style={{ background: reduce ? undefined : glow }}
-      />
-
-      <div className="relative mx-auto max-w-6xl px-6 pb-20 pt-32 text-center sm:pb-28 sm:pt-40">
-        <p
-          className="vi-rise eyebrow text-muted-foreground"
-          style={{ animationDelay: "0.05s" }}
+          className="relative h-full w-full"
+          style={{ animation: reduce ? undefined : "vi-kenburns 22s ease-out both" }}
         >
-          Associazione studentesca · Dal {SITE.foundedYear}
-        </p>
-
-        <div
-          className="vi-pop mx-auto mt-10 w-full max-w-2xl"
-          style={{ animationDelay: "0.1s" }}
-        >
-          <motion.img
-            src="/brand/logo-full.svg"
-            alt="Vivere Ingegneria"
-            style={{ y: logoY, opacity: logoOpacity }}
-            className="w-full drop-shadow-[0_8px_30px_rgba(7,29,153,0.08)]"
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
           />
         </div>
+      </motion.div>
 
-        <p
-          className="vi-rise mx-auto mt-10 max-w-xl text-lg leading-relaxed text-muted-foreground"
-          style={{ animationDelay: "0.2s" }}
-        >
-          {SITE.description}
-        </p>
+      {/* Scrims: bottom-heavy ink gradient + a soft brand tint + top fade for the header */}
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-gradient-to-b from-[#050a2e]/65 via-[#050a2e]/45 to-[#050a2e]/96"
+      />
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-gradient-to-tr from-[#071d99]/45 via-transparent to-transparent"
+      />
 
-        <div
-          className="vi-rise mt-10 flex flex-wrap items-center justify-center gap-3"
-          style={{ animationDelay: "0.3s" }}
-        >
-          <Magnetic>
+      {/* Content */}
+      <motion.div
+        style={{ y: contentY, opacity: contentOpacity }}
+        className="container-page absolute inset-x-0 bottom-0 pb-20 [text-shadow:0_2px_24px_rgba(5,10,46,0.45)] sm:pb-28"
+      >
+        <div className="max-w-4xl">
+          <motion.p
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="accent-serif text-lg text-white/80 sm:text-xl"
+          >
+            Dal {SITE.foundedYear} · Università di Palermo
+          </motion.p>
+
+          <motion.h1
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-4 max-w-3xl text-balance text-display-2xl text-white"
+          >
+            L&apos;associazione studentesca dei corsi di Ingegneria.
+          </motion.h1>
+
+          <motion.div
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-8 flex flex-wrap items-center gap-3"
+          >
+            <Magnetic>
+              <Link
+                href="/chi-siamo"
+                className="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-[#050a2e] transition-transform hover:scale-[1.03]"
+              >
+                Scopri chi siamo
+                <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </Magnetic>
             <Link
               href="/blog"
-              className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.03]"
+              className="inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:border-white hover:bg-white/10"
             >
               Leggi il blog
-              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
             </Link>
-          </Magnetic>
-          <Link
-            href="/chi-siamo"
-            className="inline-flex items-center gap-2 rounded-full border border-foreground/15 px-6 py-3 text-sm font-medium transition-colors hover:border-primary hover:text-primary"
-          >
-            Chi siamo
-          </Link>
+          </motion.div>
         </div>
+      </motion.div>
 
-        {/* Scroll cue */}
-        <div
-          className="vi-rise mt-16 flex justify-center"
-          style={{ animationDelay: "0.45s" }}
+      {/* Scroll cue */}
+      <div className="absolute inset-x-0 bottom-6 flex justify-center">
+        <span
+          aria-hidden
+          className="flex h-10 w-6 items-start justify-center rounded-full border border-white/40 p-1.5"
         >
           <span
-            aria-hidden
-            className="flex h-10 w-6 items-start justify-center rounded-full border border-foreground/20 p-1.5"
-          >
-            <span
-              className="h-2 w-1 rounded-full bg-primary"
-              style={{ animation: reduce ? undefined : "vi-scroll-cue 1.8s ease-in-out infinite" }}
-            />
-          </span>
-        </div>
+            className="h-2 w-1 rounded-full bg-white"
+            style={{ animation: reduce ? undefined : "vi-scroll-cue 1.8s ease-in-out infinite" }}
+          />
+        </span>
       </div>
     </section>
   );
