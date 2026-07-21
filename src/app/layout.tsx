@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Fraunces } from "next/font/google";
+import { Inter, Fraunces, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SiteHeader } from "@/components/site-header";
@@ -14,9 +14,17 @@ const inter = Inter({
   display: "swap",
 });
 
-// Editorial display serif — the cinematic voice of the redesign.
+// Confident geometric display sans — the headline voice (Apple/IBM/Linear register).
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["500", "600", "700"],
+});
+
+// Fraunces kept as an editorial accent (eyebrows, pull-quotes, numerals).
 const fraunces = Fraunces({
-  variable: "--font-display",
+  variable: "--font-fraunces",
   subsets: ["latin"],
   display: "swap",
   style: ["normal", "italic"],
@@ -46,7 +54,7 @@ export default function RootLayout({
     <html
       lang="it"
       suppressHydrationWarning
-      className={`${inter.variable} ${fraunces.variable} h-full`}
+      className={`${inter.variable} ${spaceGrotesk.variable} ${fraunces.variable} h-full`}
     >
       <body className="grain flex min-h-full flex-col">
         <ThemeProvider attribute="class" forcedTheme="light">

@@ -11,6 +11,12 @@
 :root {
   --radius: 0.5rem;
 
+  /* Layout rhythm — real custom properties (referenced by plain-CSS helpers,
+     which @theme inline tokens are NOT, since `inline` bakes them into utilities). */
+  --width-content: 72rem;
+  --space-section: clamp(4rem, 8vw, 8rem);
+  --space-gutter: 1.5rem;
+
   /* Warm editorial paper + ink */
   --background: #faf8f3;
   --foreground: #1a1a1e;
@@ -87,11 +93,45 @@
   --color-brand-900: var(--brand-900);
 
   --font-sans: var(--font-inter);
-  --font-display: var(--font-display);
+  --font-display: var(--font-space-grotesk);
+  --font-accent: var(--font-fraunces);
+
+  /* Fluid display type scale — big, confident, adaptive (no breakpoint hacks). */
+  --text-display-2xl: clamp(2.75rem, 6vw + 1rem, 5.75rem);
+  --text-display-2xl--line-height: 1;
+  --text-display-2xl--letter-spacing: -0.035em;
+  --text-display-2xl--font-weight: 600;
+
+  --text-display-xl: clamp(2.25rem, 4.5vw + 0.75rem, 4.5rem);
+  --text-display-xl--line-height: 1.03;
+  --text-display-xl--letter-spacing: -0.03em;
+  --text-display-xl--font-weight: 600;
+
+  --text-display-lg: clamp(1.875rem, 3vw + 0.75rem, 3.5rem);
+  --text-display-lg--line-height: 1.06;
+  --text-display-lg--letter-spacing: -0.025em;
+  --text-display-lg--font-weight: 600;
+
+  --text-display-md: clamp(1.5rem, 2vw + 0.5rem, 2.25rem);
+  --text-display-md--line-height: 1.12;
+  --text-display-md--letter-spacing: -0.02em;
+  --text-display-md--font-weight: 600;
+
+  /* Elevation — tinted ink/brand shadows (were absent; borders only). */
+  --shadow-sm: 0 1px 2px -1px rgba(26, 26, 30, 0.08), 0 1px 1px rgba(26, 26, 30, 0.04);
+  --shadow-md: 0 4px 14px -4px rgba(26, 26, 30, 0.1), 0 2px 6px -3px rgba(26, 26, 30, 0.06);
+  --shadow-lg: 0 14px 32px -8px rgba(26, 26, 30, 0.14), 0 6px 14px -8px rgba(26, 26, 30, 0.08);
+  --shadow-xl: 0 28px 56px -14px rgba(7, 29, 153, 0.2), 0 12px 26px -12px rgba(26, 26, 30, 0.12);
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 0.125rem);
   --radius-sm: calc(var(--radius) - 0.25rem);
+  --radius-xl: calc(var(--radius) + 0.5rem);
+  --radius-2xl: calc(var(--radius) + 1rem);
+
+  /* Motion — centralised easings + durations (were inline literals). */
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 
 * {
@@ -110,11 +150,19 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Editorial serif headlines (Fraunces). */
+/* Confident geometric display headlines (Space Grotesk). */
 h1, h2, h3, h4 {
-  font-family: var(--font-display), Georgia, "Times New Roman", serif;
-  letter-spacing: -0.02em;
+  font-family: var(--font-display), "Segoe UI", system-ui, sans-serif;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+}
+
+/* Fraunces italic — the editorial accent voice for kickers, quotes, numerals. */
+.accent-serif {
+  font-family: var(--font-accent), Georgia, "Times New Roman", serif;
+  font-style: italic;
   font-weight: 500;
+  letter-spacing: 0;
 }
 
 ::selection {
@@ -123,19 +171,38 @@ h1, h2, h3, h4 {
 
 /* ---- Editorial helpers ---------------------------------------------- */
 
-/* Thin, wide, uppercase kicker used across the site. */
+/* Editorial kicker — Fraunces italic, the accent voice above section titles. */
 .eyebrow {
-  font-family: var(--font-sans), sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-family: var(--font-accent), Georgia, serif;
+  font-style: italic;
+  letter-spacing: 0;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1;
 }
 
 /* Fine structural rule. */
 .hairline {
   height: 1px;
   background: var(--border);
+}
+
+/* Layout rhythm helpers built on the spacing tokens. */
+.section {
+  padding-block: var(--space-section);
+}
+.container-page {
+  width: 100%;
+  max-width: var(--width-content);
+  margin-inline: auto;
+  padding-inline: var(--space-gutter);
+}
+
+/* Consistent, visible keyboard focus across every interactive element. */
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: calc(var(--radius) - 0.25rem);
 }
 
 /* Subtle entrance — content defaults to its final state so it is never
@@ -195,7 +262,7 @@ h1, h2, h3, h4 {
 
 /* Drop cap for the lead paragraph of editorial sections. */
 .dropcap::first-letter {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-accent), Georgia, serif;
   float: left;
   font-size: 3.4em;
   line-height: 0.72;
