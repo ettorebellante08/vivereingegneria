@@ -59,8 +59,8 @@ export function PhotoCover({
       />
 
       <div className="relative mx-auto max-w-3xl text-center text-white">
-        <p className="eyebrow text-white/70">{eyebrow}</p>
-        <h2 className="mt-4 text-balance text-4xl leading-tight text-white sm:text-6xl">
+        <p className="eyebrow text-white/75">{eyebrow}</p>
+        <h2 className="mt-4 text-balance text-display-xl text-white">
           {title}
         </h2>
         {subtitle && (
@@ -120,7 +120,7 @@ function PhotoTile({
     <div
       ref={ref}
       className={cn(
-        "group relative overflow-hidden rounded-2xl bg-muted ring-1 ring-black/5",
+        "group relative overflow-hidden rounded-2xl bg-muted shadow-sm ring-1 ring-black/5 transition-shadow duration-300 hover:shadow-lg",
         aspect,
         className,
       )}

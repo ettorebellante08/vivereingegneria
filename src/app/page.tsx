@@ -10,6 +10,7 @@ import { GALLERY_PHOTOS, GALLERY_COVER } from "@/content/gallery";
 import { BlockRenderer } from "@/components/blocks/block-renderer";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/reveal";
 import { Counter } from "@/components/motion/counter";
+import { Magnetic } from "@/components/motion/magnetic";
 import { HOME_SLUG } from "@/lib/blocks/paths";
 
 export const revalidate = 60;
@@ -53,7 +54,7 @@ export default async function Home() {
       <Hero />
 
       {/* Photo cover band — the association, as a backdrop */}
-      <section className="mx-auto max-w-6xl px-6 pb-16 pt-10 sm:pb-20">
+      <section className="container-page pb-16 pt-10 sm:pb-20">
         <Reveal>
           <PhotoCover
             photo={GALLERY_COVER}
@@ -66,7 +67,7 @@ export default async function Home() {
 
       {/* Photo mosaic */}
       {GALLERY_PHOTOS.length > 0 && (
-        <section className="mx-auto max-w-6xl px-6 pb-20 sm:pb-28">
+        <section className="container-page pb-20 sm:pb-28">
           <PhotoGallery photos={GALLERY_PHOTOS} />
         </section>
       )}
@@ -82,11 +83,11 @@ export default async function Home() {
       )}
 
       {/* From the blog — the centrepiece */}
-      <section className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
+      <section className="section container-page">
         <Reveal className="flex items-end justify-between gap-4 border-b border-border pb-6">
           <div>
             <p className="eyebrow text-primary">Dal blog</p>
-            <h2 className="mt-3 text-4xl sm:text-5xl">Ultimi articoli</h2>
+            <h2 className="mt-3 text-display-lg">Ultimi articoli</h2>
           </div>
           <Link
             href="/blog"
@@ -98,7 +99,7 @@ export default async function Home() {
 
         {!featured ? (
           <Reveal className="mt-10 rounded-2xl border border-dashed border-border bg-card p-12 text-center">
-            <p className="font-display text-2xl">Il blog riparte da zero.</p>
+            <p className="text-display-md">Il blog riparte da zero.</p>
             <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
               I primi articoli — resoconti dei Consigli, aggiornamenti sulla
               rappresentanza e racconti delle attività — arriveranno presto.
@@ -109,7 +110,7 @@ export default async function Home() {
             {/* Featured */}
             <Reveal>
               <Link href={`/blog/${featured.slug}`} className="group block">
-                <div className="overflow-hidden rounded-2xl border border-border">
+                <div className="overflow-hidden rounded-2xl border border-border shadow-sm transition-shadow duration-300 group-hover:shadow-lg">
                   {featured.cover_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -162,10 +163,10 @@ export default async function Home() {
 
       {/* What we do */}
       <section className="border-y border-border bg-muted/40">
-        <div className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
+        <div className="section container-page">
           <Reveal>
             <p className="eyebrow text-primary">Cosa facciamo</p>
-            <h2 className="mt-3 max-w-2xl text-balance text-4xl leading-tight sm:text-5xl">
+            <h2 className="mt-3 max-w-2xl text-balance text-display-lg">
               Tre modi di essere presenti, ogni giorno.
             </h2>
           </Reveal>
@@ -175,7 +176,7 @@ export default async function Home() {
               <RevealItem key={h.href}>
                 <Link
                   href={h.href}
-                  className="group relative flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-2xl p-6 text-white ring-1 ring-black/5 sm:aspect-[3/4]"
+                  className="group relative flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-2xl p-6 text-white shadow-md ring-1 ring-black/5 transition-[transform,box-shadow] duration-300 hover:-translate-y-1.5 hover:shadow-xl sm:aspect-[3/4]"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -187,7 +188,7 @@ export default async function Home() {
                     aria-hidden
                     className="absolute inset-0 -z-10 bg-gradient-to-t from-[#050a2e]/92 via-[#071d99]/45 to-transparent transition-opacity duration-500 group-hover:from-[#050a2e]/95"
                   />
-                  <span className="font-display text-2xl text-white/70 transition-transform duration-300 group-hover:-translate-y-0.5">
+                  <span className="accent-serif text-3xl text-white/75 transition-transform duration-300 group-hover:-translate-y-0.5">
                     {h.n}
                   </span>
                   <h3 className="mt-2 flex items-center gap-2 text-2xl text-white">
@@ -205,22 +206,22 @@ export default async function Home() {
       </section>
 
       {/* Numbers */}
-      <section className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
-        <RevealGroup className="grid gap-10 sm:grid-cols-3">
+      <section className="section container-page">
+        <RevealGroup className="grid gap-10 border-y border-border py-14 sm:grid-cols-3">
           <RevealItem className="text-center sm:text-left">
-            <div className="font-display text-6xl text-primary sm:text-7xl">
+            <div className="accent-serif text-6xl text-primary sm:text-7xl">
               <Counter value={yearsActive} suffix="+" />
             </div>
             <p className="mt-2 text-sm text-muted-foreground">anni di attività</p>
           </RevealItem>
           <RevealItem className="text-center sm:text-left">
-            <div className="font-display text-6xl text-primary sm:text-7xl">
+            <div className="accent-serif text-6xl text-primary sm:text-7xl">
               <Counter value={14} />
             </div>
             <p className="mt-2 text-sm text-muted-foreground">corsi di laurea</p>
           </RevealItem>
           <RevealItem className="text-center sm:text-left">
-            <div className="font-display text-6xl text-primary sm:text-7xl">
+            <div className="accent-serif text-6xl text-primary sm:text-7xl">
               <Counter value={posts.length} />
             </div>
             <p className="mt-2 text-sm text-muted-foreground">
@@ -231,11 +232,11 @@ export default async function Home() {
       </section>
 
       {/* Courses */}
-      <section className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
+      <section className="section container-page">
         <Reveal className="flex items-end justify-between gap-4 border-b border-border pb-6">
           <div>
             <p className="eyebrow text-primary">I 14 corsi</p>
-            <h2 className="mt-3 text-4xl sm:text-5xl">Trova il tuo corso</h2>
+            <h2 className="mt-3 text-display-lg">Trova il tuo corso</h2>
           </div>
           <Link
             href="/corsi"
@@ -261,22 +262,30 @@ export default async function Home() {
       </section>
 
       {/* CTA */}
-      <section className="px-6 pb-24">
-        <Reveal className="mx-auto max-w-6xl">
-          <div className="rounded-[1.75rem] border border-border bg-secondary px-8 py-16 text-center sm:px-16">
-            <h2 className="mx-auto max-w-2xl text-balance text-3xl leading-tight sm:text-5xl">
+      <section className="container-page pb-24">
+        <Reveal>
+          <div className="relative overflow-hidden rounded-[1.75rem] border border-border bg-secondary px-8 py-16 text-center shadow-lg sm:px-16">
+            {/* soft brand glow, decorative */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--primary)_16%,transparent),transparent)] blur-2xl"
+            />
+            <h2 className="relative mx-auto max-w-2xl text-balance text-display-lg">
               Vuoi far parte di Vivere Ingegneria?
             </h2>
-            <p className="mx-auto mt-5 max-w-xl text-balance text-muted-foreground">
+            <p className="relative mx-auto mt-5 max-w-xl text-balance text-muted-foreground">
               Scrivici o passa a trovarci: c&apos;è sempre qualcosa da costruire
               insieme.
             </p>
-            <Link
-              href="/contatti"
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-brand-700"
-            >
-              Contattaci <ArrowRight className="size-4" />
-            </Link>
+            <Magnetic className="relative mt-8 inline-block">
+              <Link
+                href="/contatti"
+                className="group inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-brand-700"
+              >
+                Contattaci{" "}
+                <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </Magnetic>
           </div>
         </Reveal>
       </section>
