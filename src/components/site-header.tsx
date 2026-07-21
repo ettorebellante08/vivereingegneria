@@ -31,13 +31,17 @@ export function SiteHeader() {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
+  const solid = scrolled || open;
+  // White treatment while resting over the home's dark cinematic hero.
+  const light = pathname === "/" && !scrolled && !open;
+
   return (
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,border-color] duration-300",
-        scrolled || open
+        solid
           ? "border-b border-border/70 bg-background/85 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/70"
-          : "border-b border-transparent bg-background/0",
+          : "border-b border-transparent bg-transparent",
       )}
     >
       <div
@@ -46,7 +50,13 @@ export function SiteHeader() {
           scrolled ? "h-14" : "h-20",
         )}
       >
-        <Logo className={cn("shrink-0 transition-[height] duration-300", scrolled ? "h-7" : "h-8")} />
+        <Logo
+          className={cn(
+            "shrink-0 transition-[height] duration-300",
+            scrolled ? "h-7" : "h-8",
+            light && "brightness-0 invert",
+          )}
+        />
 
         {/* Desktop nav */}
         <nav className="hidden items-center gap-1 lg:flex">
@@ -55,6 +65,7 @@ export function SiteHeader() {
               key={item.href}
               item={item}
               active={isActive(item.href)}
+              light={light}
               reduce={!!reduce}
             />
           ))}
@@ -63,13 +74,21 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <Link
             href="/login"
-            className="hidden rounded-full border border-foreground/15 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary hover:text-primary sm:inline-flex"
+            className={cn(
+              "hidden rounded-full border px-4 py-2 text-sm font-medium transition-colors sm:inline-flex",
+              light
+                ? "border-white/40 text-white hover:border-white hover:bg-white/10"
+                : "border-foreground/15 text-foreground hover:border-primary hover:text-primary",
+            )}
           >
             Area riservata
           </Link>
           <button
             type="button"
-            className="flex size-10 items-center justify-center rounded-full text-foreground lg:hidden"
+            className={cn(
+              "flex size-10 items-center justify-center rounded-full transition-colors lg:hidden",
+              light ? "text-white" : "text-foreground",
+            )}
             aria-label={open ? "Chiudi il menu" : "Apri il menu"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
@@ -144,10 +163,12 @@ export function SiteHeader() {
 function DesktopNavItem({
   item,
   active,
+  light,
   reduce,
 }: {
   item: NavItem;
   active: boolean;
+  light: boolean;
   reduce: boolean;
 }) {
   const [hovered, setHovered] = useState(false);
@@ -166,7 +187,13 @@ function DesktopNavItem({
         onFocus={() => setHovered(true)}
         className={cn(
           "relative flex items-center gap-1 rounded-full px-3.5 py-2 text-sm transition-colors",
-          active ? "text-foreground" : "text-muted-foreground hover:text-foreground",
+          light
+            ? active
+              ? "text-white"
+              : "text-white/75 hover:text-white"
+            : active
+              ? "text-foreground"
+              : "text-muted-foreground hover:text-foreground",
         )}
       >
         {item.label}
@@ -181,7 +208,10 @@ function DesktopNavItem({
         {active && (
           <motion.span
             layoutId={reduce ? undefined : "nav-active"}
-            className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-primary"
+            className={cn(
+              "absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full",
+              light ? "bg-white" : "bg-primary",
+            )}
             transition={{ type: "spring", stiffness: 380, damping: 30 }}
           />
         )}
